@@ -4,3 +4,6 @@
 *.hi
 *.o
 *.swp
+*.ilk
+*.obj
+*.pdb
