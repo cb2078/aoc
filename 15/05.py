@@ -1,0 +1,6 @@
+f=lambda s:sum(s.count(c) for c in 'aeiou')>=3 and any(x==y for x,y in zip(s,s[1:])) and all(S not in s for S in ['ab','cd','pq','xy'])
+S=open('05.txt').read().strip().split('\n')
+print(sum(map(f,S)))
+n=len(S[0])
+g=lambda s:any(s[i:i+2]==s[j:j+2] for i in range(n-1) for j in range(i-1)) and any(s[i]==s[i+2] for i in range(n-2))
+print(sum(map(g,S)))
