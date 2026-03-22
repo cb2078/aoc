@@ -8,3 +8,4 @@
 *.pdb
 ignore/
 __pycache__
+makefile
