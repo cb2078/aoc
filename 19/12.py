@@ -22,7 +22,6 @@ while True:
         else:
             d[k].add(t)
         if all(c):
-            print(c)
             print(math.lcm(*c))
             quit()
     n+=1
