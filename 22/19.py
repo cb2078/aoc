@@ -1,37 +1,26 @@
 import re
-
-res = ['ore', 'clay', 'obsidian', 'geode']
-parse = lambda d: [int(d[r]) if r in d else 0 for r in res]
-
-p = open('19.txt').read().strip().split('\n')
-p = [[parse(dict(z[::-1] for z in re.findall(r'(\d+) (\w+)', y))) for y in x.split(' Each ')[1:]] for x in p]
-
-t0 = 24
-ans = 0
-for i, bp in enumerate(p):
-    print(i)
-    ore_max = max(bp[i][0] for i in range(4))
-    dp = {}
-    def solve(t, res, rob):
-        can_build = lambda i: all(bp[i][j] <= res[j] for j in range(4))
-        build = lambda i: solve(t - 1,
-                                [res[j] + rob[j] - bp[i][j] for j in range(4)],
-                                [rob[j] + (j == i) for j in range(4)])
-        k = (t, tuple(res), tuple(rob)) 
-        if k in dp:
-            return dp[k]
-        if t == 0:
-            return res[3]
-        for i in (3, 2):
-            if can_build(i):
-                x = build(i)
-                break
+p=lambda _,a,b,c,d,e,f:[[a,0,0,0],[b,0,0,0],[c,d,0,0],[e,0,f,0]]
+B=[p(*map(int,re.findall(r'\d+',x))) for x in open('19.txt').read().strip().split('\n')]
+for z in 0,1:
+  s=z
+  for i,b in enumerate(B[:3] if z else B):
+    x=0
+    def f(a=[0,0,0,0],r=[1,0,0,0],t=[24,32][z]):
+      g=lambda f:[*map(f,range(4))]
+      global x
+      if t==0:
+        x=max(x,a[3])
+        return
+      elif a[3]+r[3]*t+(t-1)*t//2<x:
+        return
+      for j in range(4):
+        if j>0 and r[j-1]==0 or j<3 and r[j]>=max(g(lambda i:b[i][j])):
+          continue
+        T=1+max(g(lambda i:b[j][i] and (b[j][i]-a[i]+r[i]-1)//r[i]))
+        if T>t:
+          x=max(x,a[3]+r[3]*t)
         else:
-            x = solve(t - 1, [res[j] + rob[j] for j in range(4)], rob)
-            for i in (0, 1):
-                if can_build(i):
-                    x = max(x, build(i))
-        dp[k] = x
-        return x
-    ans += (1 + i) * solve(t0, [0 for _ in range(4)], [1] + [0 for _ in range(3)])
-print(ans)
+          f(g(lambda i:a[i]+r[i]*T-b[j][i]),g(lambda i:r[i]+(i==j)),t-T)
+    f()
+    s=s*x if z else s+(i+1)*x
+  print(s)
